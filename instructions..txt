@@ -1,0 +1,16 @@
+1. You should have python installed in your computer.
+2. Install the virtualenv: pip install virtualenv
+3. Create one virtualenv.
+4. Activate the virtualenv.
+5. Install the requirements of project: pip install -r requirements.txt 
+6. open the folder in cmd
+7. Go till manage.py file in cmd
+8. Start the server: python manage.py runserver
+9. open localhost:8000/admin in browser.
+10. Fill the Credentials: username-admin@admin.com, password-test
+11. open localhost:8000/ in your browser.
+12. Create your channels and Post.
+13. Logout and signup/login again for new users.
+
+In case of any issues, please contact me. 
+Thank You!!!
