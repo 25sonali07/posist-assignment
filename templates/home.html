@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block body %}
+{% load humanize %}
+
+<div class="container py-5">
+    {% if channels|length > 0 %}
+    <section class="text-gray-500 body-font bg-gray-900">
+        <div class="container py-5">
+            <h2 class="pb-0 text-white" style="text-align: start;">Your Channels</h2>
+            <div id="accordion">
+                {% for channel in channels %}
+                <div class="card bg-dark" style="overflow: auto;">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse"
+                                data-target="#{{forloop.counter}}" aria-expanded="false"
+                                aria-controls={{forloop.counter}} style="color: aliceblue; font-weight: 700;">
+                                <img src="https://img.icons8.com/ios-filled/30/000000/channel-mosaic.png" style="display: inline; margin-right: 15px;"/>
+                                {{channel.name}}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id={{forloop.counter}} class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body text-white">
+                            {{channel.description}}
+                            <!-- <h6>Tags of Channel: </h6> -->
+                            <p>{{channel.tags}}</p>
+                            <a class="btn btn-info" href="/channel/{{channel.id}}">Open Channel-{{channel.name}}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% elif user.is_anonymous %} 
+    <div class="row" style="color: aliceblue; background:rgb(41, 41, 41); padding: 10px 20px; margin-top: 0px;">
+        <h5 class="col-md-12" style="text-align: center;">Please Login to access your Channels and Posts</h5>
+    </div>
+    {% else %}
+    <div class="row" style="color: aliceblue; background:rgb(41, 41, 41); padding: 10px 20px; margin-top: 0px;">
+        <h5 class="col-md-12" style="text-align: center;">No Channel is Available. Create a new Channel and start your communication..</h5>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock body %}

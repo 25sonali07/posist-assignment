@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Channels{% endblock title %}
+
+{% block body %}
+{% load humanize %}
+
+
+<div class="container my-5">
+    {% if posts.count > 0 %}
+    {% for post in posts %}
+    <div class="row" style="color: aliceblue; background:rgb(41, 41, 41); padding: 10px 20px; margin-top: 0px;">
+        <h5 class="col-md-10" >{{post.post_data}}</h5>
+        <i>{{post.user.first_name}}, {{post.created_date}}</i> 
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="row" style="color: aliceblue; background:rgb(41, 41, 41); padding: 10px 20px; margin-top: 0px;">
+        <h5 class="col-md-12" style="text-align: center;">No Post is available in this Channel..</h5>
+    </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock body %}
