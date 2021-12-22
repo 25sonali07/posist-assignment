@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRBTm52YMz9XsSELg1RXv7V-k4JyemAExhaRQ&usqp=CAU">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>{% block title %}{% endblock title %}</title>
+    <style>
+        .footer {
+           position: fixed;
+           left: 0;
+           bottom: 0;
+           width: 100%;
+           color: white;
+           text-align: center;
+        }
+        </style>
+</head>
+
+
+<body class="bg-gray-800">
+    <header class="text-gray-500 bg-gray-700 body-font">
+        <div class="container mx-auto flex flex-wrap py-2 flex-col md:flex-row items-center">
+            <a class="flex title-font font-medium items-center text-white mb-1 md:mb-0 ml-5 mr-5" href="/">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRBTm52YMz9XsSELg1RXv7V-k4JyemAExhaRQ&usqp=CAU" alt="icon" style="width: 10%; height: 10%;" class="rounded-full">
+                <span class="ml-3 text-xl">Communication App</span>
+            </a>
+            <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+                <a class="mr-3 badge badge-primary badge-pill p-2" href="/">Home</a>
+            
+            {% if user.is_authenticated %}
+            <a href="/dashboard/" class="badge badge-primary badge-pill mr-3 p-2">Dashboard</a>
+            {% if channel %}
+            <a class="mr-3 badge badge-primary badge-pill p-2" href="" data-toggle="modal" data-target="#add">Create Channel</a>
+            {% endif %}
+            {% if post %}
+            <a class="mr-3 badge badge-primary badge-pill p-2" href="" data-toggle="modal" data-target="#post">Create Post</a>
+            {% endif %}
+            <h6 class="mr-3 badge badge-success badge-pill p-2 mt-2">Hey {{ request.user.first_name|capfirst }} !!</h5>
+            <a href="/logout/" class="badge badge-primary badge-pill p-2">Logout</a>
+            {% else %}
+                <button type="button" class="badge badge-primary badge-pill mr-3 p-2" data-toggle="modal" data-target="#login">LogIn
+                </button>
+                <button type="button" class="badge badge-primary badge-pill mr-3 p-2" data-toggle="modal" data-target="#signup">SignUp
+                </button>
+            {% endif %}
+            </nav>
+        </div>
+    </header>
+     {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+    <strong>Message: </strong> {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+
+    <!-- Add Todo -->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Channel!!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/channel/" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title" class="col-form-label">Channel Name:</label>
+                            <input type="text" class="form-control" id="title" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="desc" class="col-form-label">Description:</label>
+                            <input type="text" class="form-control" id="desc" name="desc" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tags" class="col-form-label">Tags(Enter Tags comma separated without any space)</label>
+                            <input type="text" class="form-control" id="tags" name="tags" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="users" class="col-form-label">Users(Enter User Email comma separated without any space)</label>
+                            <input type="text" class="form-control" id="users" name="users" required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Channel</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal  -->
+    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Log-In Here !!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/login/" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="loginusername" class="col-form-label">Username:</label>
+                            <input type="text" class="form-control" id="loginusername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginpassword" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="loginpassword" name="password" required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Post Modal  -->
+    <div class="modal fade" id="post" tabindex="-1" role="dialog" aria-labelledby="post" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Your Post !!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/post/" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="post" class="col-form-label">Post Content:</label>
+                            <input type="text" class="form-control" id="post" name="post" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" id="channel" name="channel" value="{{channel_id}}" required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Post</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signup" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sign-Up Here !!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/signup/" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">First Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-form-label">Email:</label>
+                            <input type="text" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="region" class="col-form-label">Region:</label>
+                            <input type="text" class="form-control" id="region" name="region" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="conpassword" class="col-form-label">Confirm Password:</label>
+                            <input type="password" class="form-control" id="conpassword" name="conpassword" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">SignUp</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    {% block body %}
+    {% endblock body %}
+
+
+    <div class="footer bg-gray-700 pt-3">
+        <p>&copy; Communication-App-2021... All Rights Reserved</p>
+        </div>
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
